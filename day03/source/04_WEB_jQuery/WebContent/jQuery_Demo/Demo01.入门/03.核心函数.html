@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>核心函数</title>
+<script type="text/javascript" src="../script/jquery-1.7.2.js"></script>
+<script type="text/javascript">
+
+	//核心函数的4个作用
+	//$是jquery中核心函数，它一共四种作用，它可以根据传递参数的不同起不同的作用
+	
+	//传入参数为[函数]时：在文档加载完成后执行这个函数
+	//作用相当于window.onload = function(){};
+	$(function(){
+		//传入参数为[HTML字符串]时：根据这个字符串创建元素节点对象
+		//创建一个广州节点
+		$("<li>广州</li>").appendTo("body");
+		
+		//传入参数为[选择器字符串]时：根据这个字符串查找元素节点对象
+		//#id .class tagName
+		//alert($("#btn"));
+		
+		//传入参数为[DOM对象]时：将DOM对象包装为jQuery对象返回
+		//dom对象指通过原生的JS代码获取到对象
+		var btn = document.getElementById("btn");
+		//jQuery对象指通过jQuery核心函数获取到对象
+		var $btn = $("#btn");
+		//jQuery对象中为我们提供了非常多的方法，但是dom对象并不能调用这些
+		
+		$(btn).click(function(){
+			alert("hello");
+		});
+		
+		
+	});
+	
+	
+
+</script>
+</head>
+<body>
+
+	<button id="btn">按钮</button>
+
+</body>
+</html>

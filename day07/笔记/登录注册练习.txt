@@ -1,0 +1,24 @@
+登录的流程
+	1.用户需要在login.html页面输入用户名和密码
+	2.用户向LoginServlet提交请求
+	3.LoginServlet收到请求以后，去数据库验证用户名和密码是否正确（默认数据库中只有一个用户admin 密码123123）
+		如果用户名是admin同时密码是123123
+			登录成功 --> 重定向到login-success.html
+		否则
+			登录失败 --> 转发到login-error.html
+
+
+注册的流程
+	1.用户在regist.html页面输入用户名、密码、确认密码、电子邮件
+	2.将表单提交到RegistServlet
+	3.RegistServlet收到请求后，现获取用户填写的请求参数
+	4.将用户插入数据库,默认数据库中只有一个用户admin
+		如果用户名已经存在，转发到regist_error.html
+		如果不存在, 注册成功重定向到regist_success.html
+
+
+
+	1.用户要提交请求参数到Servlet
+	2.Servlet获取用户填写请求参数
+	3.根据需求从数据库中获取数据或者修改数据库中数据
+	4.根据处理结果返回不同的页面

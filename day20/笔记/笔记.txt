@@ -1,0 +1,148 @@
+1.文件的上传
+	[1] 简介
+		> 将一个客户端的本地的文件发送到服务器中保存。
+		> 上传文件是通过流的形式将文件发送给服务器。
+	
+	[2] 表单的设置
+		> 向服务器上传一个文件时，表单要使用post请求。
+		> 表单的默认属性enctype="application/x-www-form-urlencoded"
+			- 这个属性的意思是请求体中的内容将会使用URL编码
+		> 上传文件的表单enctype需要设置为 multipart/form-data
+			- multipart/form-data表示的是表单是一个多部件的表单
+			- 如果类型设置为它，则我们的每一个表单项都会作为一个单独的部件发送给服务器。
+			- 多个部件之间使用类似 -----------------------------7df2d08c0892 分割符来分开
+		> 当表单设置为multipart/form-data时，我们request.getParameter()将失效，我们不能再通过该方法获取请求参数。
+
+	[3] FileUpload
+		> 我们一般情况下使用commons-fileupload-1.3.1.jar这个工具来解析多部件请求。
+		> fileupload 依赖 commons-io 所以我们要是Filtupload需要同时导入io包。
+		> 核心类：
+			DiskFileItemFactory 
+				- 工厂类，用于构建一个解析器实例。
+				
+			ServletFileUpload 
+				- 解析器类，通过该类实例来解析request中的请求信息。
+				
+			FileItem 
+				- 工具会将我们请求中每一个部件，都封装为一个FileItem对象，处理文件上传时，只需要调用该对象的方法
+				-	方法：
+					boolean	isFormField()  --> 当前表单项是否是一个普通表单项，true是普通表单项， false是文件表单项
+					String	getContentType() --> 返回的是文件的类型，是MIME值
+					String	getFieldName()   --> 获取表单项的name属性值
+					String	getName() 		--> 获取上传的文件的名字
+					long getSize()          --> 获取文件的大小
+					String	getString(String encoding) --> 获取表单项的value属性值，需要接受一个编码作为参数。
+					void	write(File file)    --> 将表单项中的内容写入到磁盘中
+				
+		> 使用步骤：
+			1.获取工厂类实例
+			2.获取解析器类实例
+			3.解析request获取FileItem
+		
+	[4] 细节
+		第一个问题
+		> 部分浏览器会将文件的完整路径作为文件名发送。
+			C:\Users\lilichao\Desktop\day20\图片\蒙娜丽莎.jpg
+		> 像这类文件名我们需要截取一下字符串，只获取名字这部分，而不需要获取路径部分的信息。
+			通过如下代码对文件名进行截取字符串的操作：
+				if(name.contains("\\")){
+					//如果包含则截取字符串
+					name = name.substring(name.lastIndexOf("\\")+1);
+				}
+				
+		第二个问题
+		> 上传的文件有可能出现重名，后上传的文件会将先上传的文件覆盖。
+		> 解决：给文件名加一个唯一的前缀。
+				唯一标识_fennu.jpg
+				UUID_fennu.jpg
+		
+		第三个问题
+		> 有些情况需要限制上传文件的大小。
+			- 设置单个文件大小为50KB：
+				fileUpload.setFileSizeMax(1024*50);
+			- 设置完单个文件大小限制以后，一旦上传的文件超过限制，则会抛出如下异常：
+				FileSizeLimitExceededException
+				所有可以对该异常进行捕获，当出现该异常时则设置一个错误消息。
+			
+			- 设置多个文件的总大小为150KB
+				fileUpload.setSizeMax(1024*150);
+			- 当多个文件的大小超出范围时，会抛出如下异常
+				SizeLimitExceededException
+				
+		第四个问题
+			> 当用户上传一个空的文件，依然会将文件保存到硬盘上。
+			> 在保存文件应该先对文件的大小进行判断，如果size为0，则不处理。
+
+2.文件的下载
+	[1] 简介
+		> 将服务器中的文件下载到本地。
+		> 一般情况下资源所在的链接发送给浏览器，浏览器就会自动下载。
+			但是当浏览器支持当前文件的格式，浏览器会自动打开文件，而不会弹出下载窗口。
+		> 直接将资源放在项目的目录下，浏览器可以直接访问到资源。
+			所以一般我们下载的资源不能让浏览器直接访问到。
+	
+	[2] 下载所需要的内容
+			1.获取到文件的流
+			2.设置两个响应头
+	
+	[3] 下载相关的两个响应头
+		1) 文件类型 Content-Type --> 文件的MIME类型
+			Content-Type：告诉浏览器文件的类型，需要设置一个MIME值
+			response.setContent-Type("MIME值")
+			通过servletContext.getMimeType(path)方法可以直接获取文件的MIME类型
+			
+		2) 下载文件的信息 Content-Disposition --> attachment; filename=文件名
+			Content-Disposition告诉浏览器如何处理文件，
+			attachment 告诉浏览器这个文件是一个附件的形式发给你的，需要你做下载的操作
+			filename 告诉浏览器下载文件的名字
+			
+		3) 乱码的问题，当将文件的名字设置为中文，浏览器不能正常显示文件的名字。
+			因为从服务器向浏览器发送中文时，需要对内容进行URL编码。
+			> 大部分浏览器使用如下方式即可解决乱码问题：URLEncoder.encode(fileName, "utf-8");
+			> 但是火狐默认以Base64来解码的，所以要为火狐单独处理。
+			
+			> 可以使用如下代码来判断浏览器的类型，然后进行不同的编码处理
+				//判断当前浏览器是否为火狐
+				if(ua.contains("Firefox")){
+					//是火狐浏览器，使用BASE64编码
+					fileName = "=?utf-8?b?"+new BASE64Encoder().encode(fileName.getBytes("utf-8"))+"?=";
+				}else{
+					//给文件名进行URL编码
+					//URLEncoder.encode()需要两个参数，第一个参数时要编码的字符串，第二个是编码所采用的字符集
+					fileName = URLEncoder.encode(fileName, "utf-8");
+				}
+				
+			>  还有一种不太讲理的方式，谁问跟谁急。反正好使
+				- 向将字符串用gbk进行解码，然后在使用iso8859-1进行编码
+				fileName = new String(fileName.getBytes("gbk"),"iso8859-1");
+		
+
+3.国际化(I18N)
+	> 国际化英文 Internationalization
+	> i和n之间有18个字母，所以国际化也称为i18n
+	
+	[1]国际化简介
+		> 使一个网站可以支持不同国家语言叫做国家语言。主要指英语。
+	
+	
+	[2]国际化的原理
+		> ResourceBundle可以根据不同的Locale去加载不同的国际化资源文件，并且显示不同的信息。
+
+	[3]核心类
+		ResourceBundle
+			- 管理国际化资源文件
+		Locale
+			- 表示不同国家和语言的信息
+		国际化资源文件
+			- 国际化资源文件中要保存不同的语言信息，由ResourceBundle来管理。
+			- 要求，国际资源文件要写在类路径下
+					命名规范：基础名_语言_国家.properties
+	
+	[4]格式化标签库
+		> 我们还可以使用JSTL中fmt标签来进行国际化操作：
+			首先需要设置国际化资源文件的基础名
+				<fmt:setBundle basename="basename"/>
+			在使用Message标签来引用国际化资源文件中内容
+				<fmt:message key="值名"/>
+	
+	

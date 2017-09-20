@@ -1,0 +1,43 @@
+GET /07_WEB_HTTP/index.html HTTP/1.1
+Accept: application/x-ms-application, image/jpeg, application/xaml+xml, image/gif, image/pjpeg, application/x-ms-xbap, */*
+Accept-Language: zh-CN,en-US;q=0.5
+User-Agent: Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; WOW64; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; .NET4.0E; InfoPath.3)
+Accept-Encoding: gzip, deflate
+Host: localhost:8080
+Connection: Keep-Alive
+
+
+GET请求没有请求体，所以也没有空行
+
+GET请求报文结构
+请求首行
+请求头
+
+
+请求首行：
+	GET /07_WEB_HTTP/index.html?username=admin&password=123123 HTTP/1.1
+	请求方式 资源地址?查询字符串 协议名/协议版本
+
+请求头：
+	> 通过观察请求头是一个一个的键值对结构，有的是一个键对应一个值，有的是一个键对应多个值
+	Accept: application/x-ms-application, image/jpeg, application/xaml+xml, image/gif, image/pjpeg, application/x-ms-xbap, */*
+	允许的文件类型：文件类型使用的MIME值，*/* 代表任意类型
+	
+	Accept-Language: zh-CN,en-US;q=0.5
+	允许的语言：zh-CN 简体中  en-US 美国英语 ，主要用来告诉服务器当前用户所在的地区
+	
+	User-Agent: Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; WOW64; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; .NET4.0E; InfoPath.3)
+	用户系统信息：
+	
+	Accept-Encoding: gzip, deflate
+	允许的压缩格式：
+	
+	Host: localhost:8080
+	主机地址：
+	
+	Connection: Keep-Alive
+	连接时间：Keep-Alive表示的是一个长连接，告诉服务器等待浏览器将所有资源都加载完毕之后在断开连接
+	
+	
+	
+	

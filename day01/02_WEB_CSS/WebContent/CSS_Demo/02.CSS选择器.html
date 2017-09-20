@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>CSS选择器</title>
+	
+	<style type="text/css">
+		
+		/*通过选择器可以在页面中选择指定的元素*/
+		/*元素选择器，使用的就是标签名，它会选中页面中所有相同名字的标签*/
+		p {
+			color: red;
+		}
+		
+		/*id选择器，#id*/
+		#p1 {
+			font-size: 50px;
+		}
+		
+		/*类选择器，.class*/
+		.p2 {
+			background-color: green;
+		}
+		
+		/*选择器的分组，同时使用多个选择器*/
+
+			#p1 , .p2{
+			border: 10px red solid;
+		}
+	</style>
+</head>
+<body>		
+	
+	<!-- 一个页面中id属性它是唯一的，在页面中不能出现重复的id属性 -->
+	<!-- 一个页面中相同class属性可以有多个，我们使用class属性为标签分组 -->
+	
+	<p>那是我日夜思念深深爱着的人啊</p>
+	<p>到底我该如何表达</p>
+	<p id="p1">她会接受我吗</p>
+	<p class="p2">也许永远都不会跟她说出那句话</p>
+	<p class="p2">注定我要浪迹天涯</p>
+	<p class="p2">怎么能有牵挂</p>
+	
+</body>
+</html>
+

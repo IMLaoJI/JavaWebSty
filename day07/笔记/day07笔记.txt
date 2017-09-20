@@ -1,0 +1,124 @@
+﻿1.Servlet
+	[1] Servlet简介
+		> 运行在服务器端组件（Servlet、Filter、Listener）
+		> 作用：
+			- 接收用户请求
+			- 调用其他程序处理请求
+			- 根据处理结果返回一个页面
+			
+		> 编写Servlet的流程
+			1.创建一个类并实现Servlet接口
+			2.在web.xml文件中配置Servlet
+				<servlet>
+					<servlet-name>别名</servlet-name>
+					<servlet-class>全类名</servlet-class>
+				</servlet>
+				<servlet-mapping>
+					<servlet-name>别名</servlet-name>
+					<url-pattern>/映射的请求地址</url-pattern>
+				</servlet-mapping>
+	
+	[2] Servlet的生命周期
+		> Servlet容器负责管理Servlet的生命周期，这里容器我们可以理解Tomcat服务器。
+		> 生命周期指的Servlet对象从被创建到被销毁的过程。
+		> 生命周期方法:
+			- 构造器
+				- 第一次接受请求时调用，用来创建Servlet实例，只会调用一次。
+				- 说明Servlet是一个单例，并且他会多线程的方式去调用service()方法，所以注意尽量不要在service方法中操作全局变量。
+				
+			- init()
+				- 在构造器被调用后紧接着被调用，它用来为Servlet做初始化操作，只调用一次。
+			
+			- service()
+				- 每次处理请求的时候都会调用，它用来处理用户的请求，会调用多次。
+			
+			- destroy()
+				- 项目卸载之前调用，用来做一些收尾工作，只调用一次。
+	
+	[3] 相关接口
+		①ServletConfig
+			> 每一个Servlet都有他唯一对应的ServletConfig。
+			代表：当前Servlet的配置信息
+				 <servlet>
+					<servlet-name>CServlet</servlet-name>
+					<servlet-class>com.atguigu.servlet.CServlet</servlet-class>
+					<init-param>
+					  <param-name>phone</param-name>
+					  <param-value>138888888</param-value>
+					</init-param>
+				  </servlet>
+				  
+			获取：由服务器创建最终作为参数传递到init方法我们可以在这个方法直接使用。
+					如果我是通过继承HttpServlet的方式实现的Servlet，可以直接调用ServletConfig的方法
+			
+			功能：
+				【1】获取Servlet的别名
+				【2】获取当前Servlet的初始化参数。
+				【3】获取ServletContext对象。
+		
+		②ServletContext
+			> 每一个WEB引用都有他唯一的ServletContext对象，该对象会在项目启动时创建，在项目卸载时销毁。
+			代表：
+				> 代表整个web应用。
+				
+			获取：
+				> 可以通过getServletContext()获取
+			
+			功能：
+				[1] 可以获取整个WEB应用的初始化参数
+					 <context-param>
+						<param-name>url</param-name>
+						<param-value>http://www.atguigu.com</param-value>
+					  </context-param>
+					  
+				[2] 可以获取到资源的真实路径（物理路径）
+				[3] 可以作为一个域对象在不同的web资源之间共享数据。
+		
+	[4] GenericServlet
+	[5] HttpServlet
+		> 创建一个Servlet有三种方式
+			- 实现Servlet接口
+			- 继承GenericServlet抽象类
+			- 继承HttpServlet抽象类  *****
+		
+		> 当通过继承HttpServlet创建一个Servlet时，只需要根据要处理的请求的不同去重写不同的方法：
+			- 如果要处理get请求，则重写doGet方法
+			- 如果要处理post请求，则重写doPost方法
+	
+	[6] HttpServletRequest
+			代表：
+				> 代表浏览器发送给服务器的请求报文
+				
+			获取:
+				> 该对象由服务器创建，最终作为参数传递到doGet或doPost方法中
+			
+			功能：
+				[1] 可以获取用户发送的请求参数
+					String getParamter(String name)
+				[2] 可以获取项目名(主要用来设置绝对路径)
+					String getContextPath()
+				[3] 可以作为一个域对象在不同的web资源之间共享数据。
+				[4] 请求的转发
+					request.getRequestDispatcher(路径).forward(request,response);
+		
+	[7] HttpServletResponse
+			代表：服务器发送给浏览器的响应报文
+			获取：该对象由服务器创建，最终作为参数传递到doGet或doPost方法中
+			功能：
+				[1] 向浏览器发送一个页面或页面片段
+					response.getWriter().print();
+				[2] 请求的重定向
+					response.sendRedirect(路径);
+					
+		转发和重定向：
+			转发：收到请求后当前Servlet不去处理请求而是去调用服务器内部的其他资源处理请求。
+			重定向：Servlet发送给浏览器一个特殊的响应，这个响应告诉浏览器再次向另一个地址发送请求。
+			对比：
+			
+								转发 			重定向
+			请求的次数			1					2
+			发起的位置			服务器				浏览器
+			地址栏的改变		不变				改变
+			浏览器的感知		不知道				知道
+	
+	

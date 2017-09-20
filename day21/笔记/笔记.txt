@@ -1,0 +1,100 @@
+1.XML约束
+	1)简介
+		> XML文档都是自定义标签，所以编写起来比较随意自由。
+		> 所以我们要给XML文档创建一个规则，我们需要在遵守相应的规则的前提下来编写XML文档。
+		> XML约束共有两种形式：
+			1.DTD
+			2.Schema
+	2)DTD
+		> 文档类型定义
+		> DTD可以定义文档中可以出现哪些元素、哪些属性、哪些内容、哪些实体。
+		> 如何使用：
+			- 在XML文档内部使用
+				可以在文档中通过<!DOCTYPE student []>设置内部的DTD约束
+				语法 <!DOCTYPE 根元素 [定义元素的规则]>
+				
+				如果将DTD约束的信息编写到文档内部，那么该约束只能约束当前文档，而不能复用，
+				所以一般情况我们不使用内部的DTD约束，而是通过引入外部DTD约束的形式来使用。
+			
+			- 在XML文档外部设置DTD约束
+				- 当我们引入一个外部的DTD约束，我们的IDE可以为xml文档弹出提示代码
+				-第一种方式：引入系统内部的DTD约束文件：
+					<!DOCTYPE student SYSTEM "stu.dtd">
+					语法：
+					<!DOCTYPE 根元素 SYSTEM "约束文件的地址">
+				
+				-第二种：引入一个公共的DTD约束文件：
+					- 公共的DTD一般是放到互联网中共大家使用
+					<!DOCTYPE student PUBLIC "//www.atguigu.com//xmlDTD//stu" "stu.dtd">
+					语法：
+					<!DOCTYPE 根元素 PUBLIC "唯一标识" "url地址">
+						- url地址执向是一个dtd文件
+		
+		
+	3)命名空间
+		> namespace 命名空间 也叫 名称空间
+		> 同一个XML文档可能出现同名的标签，这时我们就可以通过使用前缀的方式来加以区分。
+		> 为元素增加前缀的目的就是要确保XML文档中的标签唯一。
+		> 简单的a b c d 不能确保前缀唯一，所以通常的方式使用url地址，但是url地址太长了，编写起来不方便
+		> 最终解决方式是为每一个url地址指定简单名字，使用该简单名字作为标签前缀，这个就是XML中命名空间
+		
+		> 我们可以通过在XML文档的根元素中通过xmlns属性来引入一个命名空间：
+			语法 xmlns:前缀 = "URL地址"
+		> 在同一个XML文档中可以引入多个命名空间，这样就可以确保XML文档中的标签的名字的唯一性。
+		> 我们还可以在文档中指定一个默认的命名空间，所谓默认的命名空间指的时，如果XML文档中标签没有使用前缀，则会使用默认命名空间。
+			语法 xmlns="url地址"
+		> 注意：一个XML文档中只能有一个默认的命名空间
+	
+	4)Schema
+		> Schema也是对XML文档进行约束。
+			> DTD是一个比较古老的技术，他是SGML过来的，所以语法比较难。
+			> DTD的语法并不是采用XML的语法，而是一种新的语法
+			> DTD不能定义太复杂的内容，比如：我想指定某一个元素的属性只能是一个int类型。
+			> DTD不支持命名空间
+		- Schema他是使用XML语法开发约束文件，他可以定义复杂XML语法规则，所以现在比较主流XML都是用Schema。
+		- Schema的约束文件的扩展名是xsd
+		- 格式：
+			<?xml version="1.0" encoding="UTF-8"?>
+			<schema xmlns="http://www.w3.org/2001/XMLSchema" 
+					targetNamespace="http://www.example.org/book"
+					xmlns:tns="http://www.example.org/book" 
+					elementFormDefault="qualified">
+					
+			</schema>
+			
+			xmlns="http://www.w3.org/2001/XMLSchema"
+				- 引入schema文档的默认命名空间
+			targetNamespace="http://www.example.org/book"
+				- 指当前文档要为哪个命名空间下的元素定义规则
+			xmlns:tns="http://www.example.org/book" 
+				- 定义当前targetNamespace指向的命名空间，可以通过别名在文档中使用命名空间，这个属性不是必须的，一般不设置
+			elementFormDefault="qualified"
+				- 文档中的标签是否必须在schema文档中进行定义
+				- qualified的意思是文档中使用的标签必须要在schema中定义过
+		
+		- 在XML文档中引入schema约束
+			<book
+				xmlns="http://www.atguigu.com/book"
+				xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				xsi:schemaLocation="http://www.atguigu.com/book book.xsd"
+			>
+				<title>aaaaa</title>
+
+			</book>
+			
+			schema约束都是在跟标签中引入：
+				xmlns="http://www.atguigu.com/book" 
+				- 指定当前文档的默认命名空间，这个命名空间需要和schema文件中的targetNamespace一致
+				
+				xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				- 引入w3c对schema的约束
+				
+				xsi:schemaLocation="http://www.atguigu.com/book book.xsd"
+				- 通过schemaLocation来管理xsd文件
+					格式：
+					xsi:schemaLocation="命名空间 xsd文件的路径"	
+			
+		
+		
+		
+		

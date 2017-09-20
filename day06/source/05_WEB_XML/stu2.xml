@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<students> 
+  <student id="1"> 
+    <name>孙悟空</name>  
+    <age>18</age>  
+    <gender>男</gender>  
+    <address>花果山</address> 
+  </student>  
+  <student id="2"> 
+    <name>唐僧</name>  
+    <age>16</age>  
+    <gender>男</gender>  
+    <address>女儿国</address> 
+  </student>  
+  <student id="3"> 
+    <name>蜘蛛精</name>  
+    <age>100</age>  
+    <gender>女</gender>  
+    <address>盘丝洞</address> 
+  </student>  
+  <student id="4">
+    <name>李逍遥</name>
+    <age>18</age>
+    <gender>男</gender>
+    <address>余杭县</address>
+  </student>
+</students>

@@ -1,0 +1,157 @@
+1.会话控制
+	
+	> Cookie实际上就是一个头。
+	> 服务器会创建Cookie，并且将Cookie以一个响应头的形式发送给浏览器
+	> 浏览器收到Cookie以后，会保存Cookie，并且每次访问服务器时都会以请求头的形式带着Cookie
+	> 服务器就可以根据浏览器带着的Cookie来识别不同的用户。
+	> Cookie的不足：
+		- Cookie是纯文本的，使用起来不安全。
+		- 浏览器每次访问服务器都需要带着Cookie，无形中增加浏览器的流量。
+		- 浏览器对Cookie的数量和大小都有不同的限制，所以我们不能再Cookie中保存大量的信息。
+	
+	[1] HttpSession
+		> 简介
+			- Cookie的信息最终都是要保存到浏览器上的，但是浏览器对Cookie的大小和数量都有限制，不能再Cookie中保存大量信息。
+			- 但是在服务器中保存的内容的大小和数量是没有限制，可不可以将用户的信息保存到服务器上的一个对象中？
+			- 可以为这个对象创建一个唯一的标示，然后将这个唯一的标示交给浏览器保存（以Cookie的形式），
+				然后服务器中就可以根据这个标识找到他的对象。
+			- 服务器中的对象就是我们熟悉的HttpSession。
+			- HttpSession用来保存当前浏览器的会话的信息，每一次会话都对应一个session对象。
+			- 一个浏览器对应一个Session对象，不同浏览器之间不会共享Session
+			- Session的默认有效时间是一次会话，一旦关闭浏览器以后Session对象将失效
+			- 每一个Session都有一个唯一的ID，我们只需要将ID交给浏览器，就可以通过ID来找到浏览器对应的那个Session对象
+			- 当服务器创建一个新的HttpSession对象时，会将session的id以Cookie的形式发送给浏览器：
+				Set-Cookie: JSESSIONID=96343C6F88D5917BEE3B8D3E940DBD66
+			- 当浏览器再次访问服务器是，会以Cookie的形式带着Session的ID，服务器会去检查ID，并根据ID获取到HttpSession对象
+				Cookie: JSESSIONID=96343C6F88D5917BEE3B8D3E940DBD66
+			- Session在服务器内部是保存到一个叫做SessionMap的集合中，这个map的key是Session的ID，值就是Session对象
+		
+		> 工作机制
+			- Session对象的创建时机
+				- Session对象是在request.getSession()方法第一次被调用时创建。
+				- 在第一次访问JSP时，也会创建一个Session对象，因为在JSP对应的java文件中，已经调用过该方法了。
+
+		> 有效时间
+			- Session对象的默认有效时间是一次会话，这里并不是因为Session对象被销毁了，
+				而是浏览器保存的JSESSIONID的这个Cookie丢失了。
+			- 能不能让Session对象，在关闭浏览器以后依然有效？
+				我们可以通过修改JSESSIONID这个Cookie有效时间，让Session在关闭浏览器之后依然有效。
+				
+			- Session对象是有一个最大的闲置时间，一旦超过最大的闲置时间，则Session对象会被销毁。
+				- 我们可以在总的web.xml文件中配置Session对象的最大闲置时间
+					<session-config>
+						<session-timeout>30</session-timeout>
+					</session-config>
+					它的单位是分钟，可以在这里来修改，但是如果在这修改那么服务器中所有项目的闲置时间都会修改。
+					如果我们只想修改我们当前项目的闲置时间，可以在当前项目的web.xml文件中进行修改
+					
+				- 通过setMaxInactiveInterval来设置有效时间
+					//当传一个大于0的数时，session的最大闲置时间会被设置为相应的秒数
+					//session.setMaxInactiveInterval(10);
+
+					//当传一个等于0的数时，代表当前Session对象立即失效
+					//session.setMaxInactiveInterval(0);
+					
+					//当传一个小于0的数时，session对象会永远有效，所以尽量不给他设置负值
+					session.setMaxInactiveInterval(-100);
+					
+				- 使Session立即失效
+					session.invalidate();
+	
+		> URL重写
+			- Session的运行机制是基于Cookie。
+			- 如果浏览器禁用Cookie，那么Session机制将会失效。
+			- 如果浏览器禁用了Cookie，那么浏览器将不会保存JSESSIONID这个Cookie，但是我们可以通过地址栏来传递Cookie的信息
+				http://localhost:8080/16_WEB_Session/2.jsp;jsessionid=2AA78907BE47396DA23DEB094269AFF3
+			- 可以通过
+				response.encodeRedirectURL("绝对路径")
+				response.encodeURL("绝对路径")
+				这两个方法来重写URL地址，这两个方法，当浏览器不支持Cookie时会自动的在地址后边加上Cookie的信息
+			
+			- 还可以通过c:url标签来重写URL地址
+				<c:url value="/2.jsp"></c:url>
+				注意使用URL标签时，不用加上项目名
+				
+			- 一般开发时，我们不太使用URL重写，因为URL重写不太安全。
+		
+		> Session的活化和钝化
+		
+			> 钝化：
+				- 将一个HttpSession对象序列化到硬盘中我们成为Session的钝化。
+			
+			> 活化
+				- 将写入硬盘中HttpSession对象反序列化到内存中的过程我们成为Session的活化。
+				
+			> 一般情况下，当服务器停止时，Session对象会被写入到硬盘中，然后当服务器再次启动时，
+				会自动将硬盘中的对象加载进内存。
+			
+			>  如果希望Session域中的属性可以和Session一起钝化到磁盘中，那这些属性必须实现java.io.Serializable接口
+			
+			> 当访问服务器的用户过多时，会有非常多的会话产生，这些会话，每一个会话都会对应一个HttpSession对象。
+				这时在服务器的内存会存在大量的Session对象，但是这些对象并不是都在使用中，
+				所以我们希望将这些不使用的Session对象钝化到硬盘中，当这些对象再次使用时，在活化进内存。
+		
+			在Tomcat的配置文件conf/context.xml文件的根标签中加入如下代码
+				<Manager className="org.apache.catalina.session.PersistentManager" maxIdleSwap="1">
+					<Store className="org.apache.catalina.session.FileStore" directory="mySession" />
+				</Manager>
+			maxIdleSwap属性：指的Session闲置时间，当闲置一定时间以后，会自动钝化到硬盘中
+			directory属性：Session钝化后的目标文件夹
+			
+		> 表单的重复提交
+			- 同一个表单中的内容多次提交到服务器中。
+			- 第一种情况：
+				提交完表单以后，不做其他操作，直接刷新页面，表单会提交多次。
+				- 这种情况产生的根本原因是，Servlet处理完请求以后，直接转发到目标页面。
+				- 这样整一个业务，只发送了一次请求，那么当你在浏览器中点击刷新按钮或者狂按f5会一直都会刷新之前的请求
+				
+				-解决方案：
+					使用重定向跳转到目标页面
+				
+			- 第二种情况：
+				在提交表单时，如果网速较差，可能会导致点击提交按钮多次，这种情况也会导致表单重复提交。
+				- 产生的原因：是因为咱们的提交按钮可以点击多次。
+				
+				- 解决方案：	
+					使提交按钮只能点击一次。这事咱们得通过js来完成。
+				
+				window.onload = function(){
+		
+					//获取按钮的对象
+					var btn = document.getElementById("sub_btn");
+					//为按钮绑定单击响应函数
+					btn.onclick = function(){
+						
+						//点击以后使按钮不可用
+						this.disabled=true;
+						
+						//当将提交按钮设置为不可用时，会自动取消它的默认行为
+						//手动提交表单
+						this.parentNode.submit();
+						
+					};
+					
+				};
+				
+			- 第三种情况：
+				表单提交成功以后，直接点击浏览器上回退按钮，不刷新页面，然后点击提交按钮再次提交表单。
+				- 产生的原因：
+					因为服务器在处理请求时，不会检查是否为重复提交的请求。
+				- 解决方案：
+					使用一个token的机制。
+					- token就是令牌的意思。
+					- 服务器在处理请求之前先来检查浏览器的token。
+					- token由服务器来创建，并交给浏览器，浏览器在向服务器发送请求时需要带着这个token
+					- 服务器处理请求前检查token是否正确，如果正确，则正常处理，否则返回一个错误页面
+					- 服务器所创建的token只能使用一次。
+					- token一般使用一个唯一的标识。
+				
+			- 表单重复提交的危害：
+				- 向数据库中插入大量的重复且没有意义的数据，占用服务器的资源。
+				- 处理请求服务器并没有检查请求是否为重复的请求，导致恶意的攻击。
+		
+
+2.项目第6阶段
+	[1]用户登录退出
+	[2]验证码(kaptcha)
+

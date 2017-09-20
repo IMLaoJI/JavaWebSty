@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<books xmlns:a="http://www.atguigu.com/xml/a" xmlns="http://www.atguigu.com/xml/b">
+	<book>
+		<title>三国演义</title>
+		<a:author>
+			<a:name>罗贯中</a:name>
+			<a:title>先生</a:title>
+		</a:author>
+	</book>
+
+</books>

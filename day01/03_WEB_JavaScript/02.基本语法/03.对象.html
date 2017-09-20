@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>JS中的对象</title>
+<script type="text/javascript">
+	//创建对象的两种方式
+	//第一种方式
+	var obj = new Object();
+	
+	//第二种方式
+	var obj2 ={};
+	
+	//动态的向对象中添加属性
+	//对象.属性名 = 属性值
+	obj.name = "sunwukong";
+	obj.age = 18;
+	obj.fun = function(){
+		alert("我是obj的fun函数");
+	};
+	
+	//在创建对象时向对象中添加属性
+	var obj3 = {
+					name:"孙悟空",
+					age:20,
+					fun:function(){
+						alert("hello");
+					}
+				};
+	
+	
+	//alert(obj3.age);
+	
+	obj3.fun();
+	
+	//obj.fun();
+	
+
+</script>
+</head>
+<body>
+
+</body>
+</html>

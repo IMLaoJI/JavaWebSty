@@ -1,0 +1,141 @@
+1.Filter
+	[1] Filter简介
+		> Filter翻译为中文是过滤器的意思。
+		> Filter是JavaWeb的三大web组件之一Servlet、Filter、Listener
+		> Filter的作用是在请求到达WEB资源（HTML、CSS、Servlet、JSP）之前进行拦截。
+		> Filter需要交给Tomcat访问器来管理
+		> Filter的作用：
+			1.Filter可以在请求到达目标资源之前进行拦截
+			2.Filter也可以放行请求
+			3.Filter可以在响应到达浏览器之前做一个预处理
+
+	[2] Filter的HelloWorld
+		> 步骤：
+			1.创建一个类实现Filter接口
+			2.在web.xml文件中对Filter进行配置
+				 <filter>
+					<filter-name>Filter的别名</filter-name>
+					<filter-class>Filter的全类名</filter-class>
+				 </filter>
+				 <filter-mapping>
+					<filter-name>别名</filter-name>
+					<url-pattern>需要Filter拦截的资源地址</url-pattern>
+				 </filter-mapping>
+
+	[3] Filter的生命周期
+		> 一个请求的发送，到响应返回是一个线程。
+		> Filter的生命周期，指的是Filter对象由被创建到被销毁的过程。
+		> Filter的生命周期方法：
+			- 构造器：Filter的构造器在服务器启动时调用。 构造器只会调用一次，说明Filter也是单例多线程的。
+			- init()：在构造器被调用后，紧接着被调用。作用：用来初始化Filter。
+			- doFilter()：每一次拦截请求时都会调用。
+				参数
+					ServletRequest request
+						>  请求报文
+					ServletResponse response
+						>  响应报文
+					FilterChain chain
+						>  该对象的作用就是放行请求：
+							可以通过 chain.doFilter(request,response) 放行请求。
+							当调用chain.doFilter()就相当于调用目标的资源的service方法。
+			- destroy方法在项目停止时调用，用来在对象被销毁前做一些收尾工作。
+			
+		> url-pattern的设置规则：
+			1.精确匹配：只有当目标资源的地址和url-pattern的地址一模一样时，Filter才会拦截资源
+				例子：/2.jsp , 只有当浏览器访问项目根目录下的2.jsp时，才会调用Filter
+			
+			2.路径匹配：当访问的资源在url-pattern配置的路径下时，Filter就会拦截资源。
+				例子1：/hello/* ， 只要访问项目根目录下hello下的资源，就会调用Filter。
+				例子2：/* , 会拦截项目根目录下所有资源
+			
+			3.后缀匹配：只要访问的资源地址和url-pattern的后缀一样就会调用Filter
+				例子：*.jsp 只要是以jsp结尾的请求都会拦截
+				
+			- 以上规则适用于Servlet的url-pattern配置
+			
+			- 当使用Filter拦截一个Servlet时，可以将Filter的url-pattern和Servlet的url-pattern一样
+				这样Filter就会拦截发送到Servlet的请求。
+			
+			- 也可以通过在filter-mapping中添加一个servlet-name标签来设置要拦截的Servlet的name
+
+	[4] Filter的执行顺序
+		> 我们可以为一个资源设置多个过滤器，
+			当我们为一个资源设置了多个过滤器时，这些过滤器就组成一个Filter链的结构。
+				当我们去掉用chain.doFilter(),如果该过滤器后边还有其他的过滤，
+					相当于调用了下一个过滤器doFilter()方法
+				如果过滤器后没有其他的过滤器，我们调用chain.doFilter()
+					相当于调用了目标资源的service()方法。
+		
+		> 多个Filter的执行顺序，有filter-mapping标签的配置顺序决定，
+			filter-mappint靠前，则filter先执行，靠后则后执行。
+		
+		> 我们可以通过修改filter-mapping的顺序来修改Filter的执行顺序，
+			但是注意，filter-mapping不能写在filter标签的前边。
+
+	[5] 登录练习
+			1. 创建一个登录页面login.jsp
+			2. 创建一个登录成功页面login-success.jsp
+			3. 创建一个UsernameFilter，来检查用户的用户名是否正确，默认用户名为admin。
+				- UsernameFilter要对哪个资源进行过滤？
+				- 对login-success.jsp的请求进行过滤
+					检查用户名是否为admin
+						如果是admin，则放行
+						否则直接转发回登录页面。
+			4. 创建一个PasswordFilter，用来检查用户的密码是否正确，密码为123123.
+				- 拦截发送给login-success.jsp
+				- 获取用户填写的密码
+					判断密码是否为123123
+						如果是123123
+							则放行
+						否则直接转发回登录页面。
+
+	[6] HttpFilter
+	[7] dispatcher
+		> Filter默认只会拦截直接向目标资源发送的请求，而像转发之类的请求不会拦截
+		> 可以在在filter-mapping的dispatcher标签中来指定过滤器要拦截的请求类型：
+			 <dispatcher>REQUEST</dispatcher>
+				代表拦截发送到目标资源的直接请求，如果不指定dispatcher默认值就是request
+				如果在filter-mapping设置了dispatcher则按照设置的内容来
+				
+			 <dispatcher>FORWARD</dispatcher>
+				FORWARD代表会拦截通过转发访问目标资源的请求。
+			 
+			 <dispatcher>INCLUDE</dispatcher>
+				INCLUDE会拦截动态包含的请求。
+			 
+			 <dispatcher>ERROR</dispatcher>
+				ERROR是拦截在web.xml中声明的错误页面的
+				- 我们可以在web.xml文件进行一个错误页面的映射，通过如下标签：
+					 <error-page>
+						<error-code>404</error-code>
+						<location>/4.jsp</location>
+					  </error-page>
+					error-code指的是发生错误的代码
+					location 发生错误以后去到的页面		
+					
+	[8] 模拟一个简单BBS论坛系统。
+		- 项目开发完毕以后，发现项目中出现请求乱码的问题。
+		- 这个问题解决起来还是很简单，只需要在第一次使用request.getParamter()时调用request.setCharacterEncoding("utf-8");即可。
+		- 但是这行代码实际在大部分servlet中都需要调用。
+		- 统一来解决post请求乱码的问题？
+			- 创建一个Filter用来过滤所有请求，在Filter将request的编码设置为utf-8，然后在放行请求。
+		- 当系统中需要处理一些敏感字符时，我们需要将敏感字符隐藏。
+			但是如果我们在servlet中来设置，每个servlet都需要处理一次。
+		- 所有为了统一解决敏感字符问题，我们需要创建一个WordFilter，来统一的处理敏感字符。
+		
+		- 咱们一不小心讲了一个设计模式：
+		- 装饰者模式
+			- 作用：当我们向对一个对象的某一个功能进行扩展时，但是又不能去直接修改源码时，我们一般会使用装饰者模式。
+			
+			- 定义：装饰者模式就是这我们通过一个包装类，来对原有对象进行包装，并对原有的对象的方法进行扩展。
+			
+			- 好处：我们不需要对原有对象或类进行修改，就可以对原有对象的功能进行扩展。
+			
+			- 创建包装类的步骤：
+				1.包装类必须具有和原对象相同的接口或父类。
+				2.包装类要有一个原有对象的引用，包装类使用引用来间接的实现方法。
+				3.包装类中必须有一个有参的构造器，需要将原有对象作为参数传入构造器。
+				4.不能有无参的构造器。
+				
+
+	

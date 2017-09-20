@@ -1,0 +1,56 @@
+POST /07_WEB_HTTP/index.html HTTP/1.1
+Accept: application/x-ms-application, image/jpeg, application/xaml+xml, image/gif, image/pjpeg, application/x-ms-xbap, */*
+Referer: http://localhost:8080/07_WEB_HTTP/form.html
+Accept-Language: en-US,zh-CN;q=0.5
+User-Agent: Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; WOW64; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; .NET4.0E; InfoPath.3)
+Content-Type: application/x-www-form-urlencoded
+Accept-Encoding: gzip, deflate
+Host: localhost:8080
+Content-Length: 29
+Connection: Keep-Alive
+Cache-Control: no-cache
+
+username=%E5%BC%A0%E4%B8%89&password=13123
+
+请求首行
+	POST /07_WEB_HTTP/index.html HTTP/1.1
+	请求方式 资源地址 协议名/协议版本
+	
+请求头
+	Accept: application/x-ms-application, image/jpeg, application/xaml+xml, image/gif, image/pjpeg, application/x-ms-xbap, */*
+	Referer: http://localhost:8080/07_WEB_HTTP/form.html
+	请求的来源：广告计费   防止盗链
+	
+	Accept-Language: en-US,zh-CN;q=0.5
+	
+	User-Agent: Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; WOW64; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; .NET4.0E; InfoPath.3)
+	
+	Content-Type: application/x-www-form-urlencoded
+	请求体的类型：application/x-www-form-urlencoded请求体中的内容将会使用URL编码，
+		将URL地址中的中文转换为二进制字符就叫做URL编码
+		URL编码的过程
+			文本 --> 二进制编码 --> 十六进制
+	
+	Accept-Encoding: gzip, deflate
+	Host: localhost:8080
+	Content-Length: 29
+	请求体的长度：
+	
+	Connection: Keep-Alive
+	Cache-Control: no-cache
+	是否使用缓存：no-cache不使用缓存
+
+空行
+	作用分割请求首部和请求体
+	
+请求体
+	用来传递请求参数
+
+get请求和post请求的区别
+	除了表单method属性设置为post时，其余情况都是get请求
+	get请求通过url地址传送请参数，post请求通过请求体来发送请求参数
+	get请求没有体，post请求有体
+	get请求发送的请求参数可以通过地址栏直接看到，而post请求不能看到，所以post请求稍微安全一些
+	url地址的字符限制为255个字符，所以不能通过get请求发送大量的信息
+	请求体的大小是没有限制，所以我们可以通过post请求发送任何信息
+	一般情况下提交表单时都是用post请求

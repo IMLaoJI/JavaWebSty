@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>JS中的事件</title>
+
+</head>
+<body>
+
+	<!-- 我们可以通过为标签的指定事件属性设置响应函数的方式来绑定事件 -->
+	<!-- 将js代码和html代码写到了一起，结构与行为耦合，不推荐使用 -->
+	<!-- <button id="btnId" onmouseover="alert('hello')">SayHello</button> -->
+	
+	
+	<button id="btnId">SayHello</button>
+	
+	<script type="text/javascript">
+		//将js代码编写到body标签的后边，能获取到对象，但是不符合使用习惯
+		
+		//获取按钮的对象
+		var btn = document.getElementById("btnId");
+		
+		alert(btn);
+		
+	</script>
+	
+</body>
+</html>

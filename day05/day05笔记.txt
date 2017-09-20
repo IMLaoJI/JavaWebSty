@@ -1,0 +1,163 @@
+1.XML
+	[1] XML简介
+		> 可扩展的标记语言。
+		> XML和HTML很像，html用来显示一个网页，XML用来传输和存储数据。
+		> XML中全都是自定义标签。
+		> XML实际上就是一种保存数据的格式。
+		> XML是一种跨平台传输数据的格式，因为XML是一个纯文本文件。
+		
+		> XML文件的例子
+			<?xml version="1.0" encoding="utf-8" ?>
+			<root>
+				<!--文档的内容-->
+			</root>
+			
+			CDATA数据区中的内容不会被解析器当成XML标签所解析。
+			<![CDATA[内容]]>
+			
+	[2] XML语法规范
+			1.XML文件的第一行是XML声明，声明用来声明文件的版本以及编码。
+			2.XML有且只有一个根标签。
+			3.XML中的标签必须正确结束（成对出现 或 自结束标签）
+			4.XML的属性必须有值且值必须加引号。
+			5.XML标签不能交叉嵌套。
+			6.XML中严格区分大小写。
+			7.标签名不能以数字开头。
+		
+	[3] 技术体系
+			> 对于XML来说最重要的就是XML解析。
+			> XML解析指的就是将XML文档读入程序中，并转化为程序的对象。
+			> 解析XML一共有两个体系DOM 和 SAX 这两种方式都是JDK原生支持的。
+			> DOM
+				- Document Object Model(文档对象模型)，他会一次性将xml文档全部加载进内存中，
+					生成一个DOM树，然后我们通过DOM树，来读取文档的内容。
+				- 优点：
+					它是完全面向对象的方式来解析文档，所以使用起来比较简单，并且它还支持文档的增删改查。
+					它是一次性将文档全都加载进内存的，文档会常驻内存中，所以我们可以反复操作文档。
+				- 缺点：
+					它是一次性将文档全都加载进内存的，所以如果文档过大会大量的耗费内存，并且解析性能较差。
+					
+			> SAX
+				- Simple API for XML
+				- 基于事件的回调的方式来解析xml文档，一次只读取一个节点，并通过方法将读取到内容返回。
+				- 优点：
+					- 一次只读取一个节点，不会将整个文档都加载进内存中，所以占用内存较小，解析性能较好
+				- 缺点：
+					-　只能做查询操作，不能修改，使用起来比较复杂。
+					-  一旦解析过一个节点以后，将不能再重复解析，如果希望重复解析，只能重新开始解析。
+					- SAX解析一旦开始就必须等到解析结束才能停止。
+		
+	[4] 原生DOM解析
+		> JDK原生支持，可以直接使用
+		> 核心类：DocumentBuilderFactory DocumentBuilder Document
+		> 解析的步骤：
+			//获取工厂类实例
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			//获取解析器类实例
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			//解析xml文档获取Document对象
+			Document document = builder.parse("stu.xml");
+		
+	[5] dom4j解析
+		> 它是开源的免费的第三方工具，它是我们JavaEE开发首选xml的解析工具。
+		> 核心类: SAXReader
+		> 步骤：
+			//获取解析器类实例
+			SAXReader reader = new SAXReader();
+			//解析xml文档获取Document对象
+			Document document = reader.read("stu.xml");
+			//dom4j的操作是从根节点开始，所以先要通过Document对象获取根节点，然后通过根节点来做解析
+			Element rootEle = document.getRootElement();
+		
+	[6] dom4j修改
+			- 添加元素
+				Element addElement(标签名)
+			- 添加属性
+				Element addAttribute(属性名,属性值)
+			- 添加文本内容
+				Element addText(文本)
+			
+			//创建一个漂亮的格式
+			OutputFormat format = OutputFormat.createPrettyPrint();
+			//创建一个XMLWriter对象
+			XMLWriter writer = new XMLWriter(new FileWriter("stu2.xml"),format);
+			//将Document对象写入到文件中
+			writer.write(document);
+			//关闭流
+			writer.close();
+			
+			- 创建空的Document对象
+			Document document = DocumentHelper.createDocument();
+		
+	[7] xPath
+		- xPath主要用来在xml文档中查询节点
+		- 语法参考菜鸟文档
+		- dom4j支持xPath查询，使用时需要导入一个jar包 jaxen-1.1-beta-6.jar
+		- 使用：
+			List selectNodes(xpath表达式)
+			Node selectSingleNode(xpath表达式)
+		
+	[8] SAX解析
+		- 核心类：SAXParserFactory SAXParser DefaultHandler
+		- 步骤：
+			//创建工厂类实例
+			SAXParserFactory factory = SAXParserFactory.newInstance();
+			//获取解析器类实例
+			SAXParser parser = factory.newSAXParser();
+			//解析xml文档
+			//sax的解析的全部操作都是通过处理器类来实现
+			//使用sax解析我们需要自己创建一个处理器类
+			parser.parse("stu.xml", new MyHandler());
+			
+			处理器类中的方法：
+				startDocument() --> 解析开始时调用
+				endDocument() --> 解析结束时调用
+				
+				startElement(String uri, String localName, String qName, Attributes attributes)
+					- 解析开始标签时调用
+					- qName 标签名
+					- attributes 当前标签中所有属性
+					
+				endElement(String uri, String localName, String qName)
+					- 解析结束标签是调用
+					- qName 标签名
+				
+				characters(char[] ch, int start, int length)
+					- 解析文本内容时调用
+					- 会将文本内容以char数组的形式返回，我们可以使用一个String的构造器将数组转换为字符串。
+					
+	[9] PULL解析
+			> 为解决SAX的一些局限（不能手动控制解析结束），出现pull解析
+			> 使用pull解析需要导入两个jar包：
+				kxml2-2.3.0.jar
+				xmlpull_1_0_5.jar
+			> 核心类：XmlPullParserFactory XmlPullParser
+			> 步骤：
+				//获取工厂类实例
+				XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+				//获取解析器类实例
+				XmlPullParser parser = factory.newPullParser();
+				//读写xml文档
+				parser.setInput(new FileReader("stu.xml"));
+			> Pull解析的一切操作，都是通过XmlPullParser对象进行的。
+				XmlPullParser方法：
+					int next() --> 向下解析一个节点
+					int getEventType() --> 获取当前的事件类型
+					String getName() --> 获取当前的标签名
+					String getText() --> 获取当前的文本内容
+					String nextText() --> 获取下一个节点的文本内容
+					String getAttribute(命名空间,属性名) --> 获取当前元素的指定属性
+					int nextTag() --> 直接读下一个标签
+				
+				XmlPullParser常量：
+					1.START_DOCUMENT = 0
+					2.END_DOCUMENT = 1
+					3.START_TAG = 2
+					4.END_TAG = 3
+					5.TEXT = 4
+				- 可根据常量来判断当前的事件类型
+					
+					
+					
+					
+		

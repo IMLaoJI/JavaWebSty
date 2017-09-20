@@ -1,0 +1,120 @@
+1.项目第8阶段- 过滤器（事务管理）
+	[1] 项目中的登录验证
+	[2] 事务管理
+	
+2.Listener
+	[1]监听器简介
+		> Listener是JavaWeb中三大组件之一。Servlet、Filter、Listener
+		> 三大组件都有的共同特点，都需要实现一个接口，并在web.xml文件配置。
+			监听器：朝阳群众
+			监听对象：明星
+			监听的事件：干坏事
+			调用方法：报警
+			
+		> JavaWeb中的监听器的监听对象是谁？
+			ServletContext
+			HttpSession
+			ServletRequest
+	[2]监听器分类	
+		> JavaWeb中的监听器共有三种，共8个监听器
+			- 生命周期监听器，监听三个对象的创建和销毁的事件。
+			
+			- 属性监听器，监听三个对象中属性的变化。
+			
+			- session对象监听器，将它session中的属性，以及session的活化和钝化。
+
+	[3]生命周期监听器
+		ServletContextListener
+			- ServletContext生命周期监听器
+				- void contextDestroyed(ServletContextEvent sce) 
+					- 该方法在ServletContext对象销毁前调用
+					
+				- void contextInitialized(ServletContextEvent sce)  
+					- 该方法在ServletContext对象创建之前调用。
+	
+				- ServletContextEvent 对象可以获取到ServletContext对象
+					ServletContextEvent.getServletContext();
+				
+		HttpSessionListener
+			- HttpSession生命周期监听器
+				- void sessionCreated(HttpSessionEvent se) 
+					- 该方法在Session创建时调用
+					
+				- void sessionDestroyed(HttpSessionEvent se) 
+					- 在session销毁时调用
+				
+				- HttpSessionEvent
+					- 可以获取HttpSession对象
+			
+		ServletRequestListener
+			- void requestDestroyed(ServletRequestEvent sre) 
+				- 在request对象销毁时调用
+			
+			- void requestInitialized(ServletRequestEvent sre) 
+				- 在request对象创建时调用
+			
+			- ServletRequestEvent
+				可以获取ServletContext对象和ServletRequest
+		
+		编写一个监听器的步骤：
+			1.创建一个类并实现一个接口。
+			2.在web.xml文件中注册监听器。
+
+	[4]属性监听器
+		> 属性监听器，监听三个域中的属性的变化：添加一个属性，替换一个属性，移除一个属性
+		> ServletContextAttributeListener
+			- 监听ServletContext中的属性的变化
+			
+			void attributeAdded(ServletContextAttributeEvent scab) 
+				- 当向ServletContext中添加属性时调用
+				
+			attributeRemoved(ServletContextAttributeEvent scab) 
+				- 移除属性时调用
+			
+			attributeReplaced(ServletContextAttributeEvent scab) 
+				- 替换一个属性时调用
+
+		> HttpSessionAttributeListener
+			void attributeAdded(HttpSessionBindingEvent se) 
+			void attributeRemoved(HttpSessionBindingEvent se) 
+			void attributeReplaced(HttpSessionBindingEvent se) 
+			
+			-	HttpSessionBindingEvent
+				1.可以获取到属性名 getName()
+				2.可以获取属性的旧值 getValue()
+				3.可以获取到HttpSession对象 getSession();
+ 
+
+		> ServletRequestAttributeListener
+			void attributeAdded(ServletRequestAttributeEvent srae) 
+			void attributeRemoved(ServletRequestAttributeEvent srae) 
+			void attributeReplaced(ServletRequestAttributeEvent srae) 
+ 
+
+	> 以下两个监听器监听session域中的属性的。
+	[5]HttpSessionBindingListener
+		> 监听session域中某一个类的实例的添加和移除。
+		> 该接口由JavaBean来实现，不需要再web.xml文件配置
+			valueBound(HttpSessionBindingEvent event) 
+				- 当该类的实例，作为属性设置进session域中时调用
+			valueUnbound(HttpSessionBindingEvent event)
+				- 当该类的实例，从session域中被移除时调用
+		
+
+	[6]HttpSessionActivationListener
+		> 监听session域中的某类属性，和session一起活化和钝化的事件。
+		> 该接口由JavaBean来实现，同样不需要再web.xml中配置
+			void sessionDidActivate(HttpSessionEvent se) 
+				- 当前对象和session一起被活化到内存时调用
+				
+			void sessionWillPassivate(HttpSessionEvent se) 
+				- 当前对象和session一起钝化到硬盘时调用
+
+		
+		
+		
+		
+		
+		
+		
+		

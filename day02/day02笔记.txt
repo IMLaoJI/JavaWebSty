@@ -1,0 +1,114 @@
+1.JavaScript
+	[1]事件
+		①用户操作网页或者浏览器所发生的交互行为称为事件。比如：点击按钮，最小化窗口，修改文本框内容等。
+		②JS为我们定义许多浏览器中的事件。比如：单击、双击、移动 等。
+		③我们可以通过为事件设置一个响应函数来对事件进行响应。可以通过两种方式为元素绑定响应函数：
+			1) 直接通过标签的属性来设置,这种方式是结构与行为耦合，不推荐使用
+					<button onclick="alert('hello')">按钮</button>
+					- 这种方式叫做结构与行为耦合，不推荐使用这种方式。
+
+			2) 在<script>标签中来设置 
+					<button id="btn">按钮</button>
+					<script>
+						//获取到按钮的对象
+						var btn = document.getElementById("btn");
+						//为btn绑定一个单击响应函数
+						btn.onclick = function(){
+							alert("hello");
+						};
+					</script>
+				
+	[2]加载方式
+		①浏览器加载网页代码时是由上到下依次加载的。
+		②如果我们在浏览器还尚未加载网页中的元素，那么将无法确定，控制台将会报错，解决该问题有两种方式：
+			1) 将JS代码编写到body标签的下边。但是我们习惯上将JS、CSS等代码都写在head标签中。这种形式不符合使用习惯。 
+			
+			2) 将js代码编写到window.onload = function(){}中。推荐的使用方式
+			
+			注意：编写js时，上来就把window.onload = function(){}写上。
+			
+	[3]DOM编程
+		Document Object Model
+		DOM编程是JavaScript中非常重要的一部分内容，对于我们后台工程师来说非常重要。
+		DOM主要是通过JavaScript来控制网页中的各种元素，从而达到使网页可以和用户进行动态交互的作用。
+		DOM的操作主要分四部分增、删、改、查。
+		
+		节点类型：
+			元素节点
+			文本节点
+			属性节点
+		
+		①DOM查询
+			1) 通过document对象查询
+				document.getElementById(id)
+					- 通过id获取一个元素节点对象
+					
+				document.getElementsByTagName(标签名)
+					- 通过标签名获取一组元素节点对象
+					
+				document.getElementsByName(name属性)
+					- 通过name属性获取一组元素节点对象，一般用来获取表单项
+
+			2) 通过具体的元素对象查询
+				
+				element.getElementsByTagName(标签名)
+					- 查找当前元素节点内指定标签名的子节点
+				
+				element.childNodes
+					- 获取当前节点的所有子节点
+				
+				element.firstChild
+					- 获取当前节点的第一个子节点
+				
+				element.lastChild
+					- 获取当前节点的最后一个子节点
+					
+				element.parentNode
+					- 获取当前节点的父节点
+				
+				element.previousSibling
+					- 获取前一个兄弟节点
+					
+				element.nextSibling
+					- 获取后一个兄弟节点
+		
+			3) 获取元素的属性
+				
+				获取
+					元素.属性名
+				
+				设置
+					元素.属性名 = 属性值
+				
+			4) this
+				> this指向的是当前函数的所属对象。
+				
+		②DOM增删改
+			1) 创建元素节点
+				document.createElement(标签名)
+				
+			2) 创建文本节点
+				document.createTextNode(文本值)
+				
+			3) 添加子节点
+				父节点.appendChild(子节点)
+				
+			4) 插入节点
+				父节点.insertBefore(新节点,旧节点)
+				
+			5) 替换节点
+				父节点.replaceChild(新节点,旧节点)
+				
+			6) 删除节点
+				父节点.removeChild(子节点)
+				子节点.parentNode.removeChild(子节点) *****
+				
+			7) 读写元素内部HTML代码
+				读取
+					元素.innerHTML
+				设置
+					元素.innerHTML = 新值
+				
+
+	
+			

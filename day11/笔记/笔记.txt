@@ -1,0 +1,249 @@
+1.自定义标签
+	[1]简介	
+		> 在JSP2.0以后页面不推荐使用JSP脚本片段以及JSP表达式
+		> 使用EL来替换JSP表达式
+		> 使用标签来替换JSP脚本片段
+		> <jsp:forward>
+		> jsp标签最终会被翻译完一段java代码，所以使用标签就是以标签的形式去调用Java代码
+		> JSP内部已经为咱们提供很多的预定义JSP动作标签，但是这些标签不能满足我们的全部需求。
+		> 所以我们需要开发自定义标签，多个自定义标签就构成了一个自定义标签库。
+	
+	[2]使用步骤
+		1.创建一个标签处理器类
+			> 标签处理器类需要实现SimpleTag接口。
+			> SimpleTag接口中的方法：
+				void doTag() --> 接口中最重要的方法，实际标签每次执行时都是调用doTag方法
+				JspTag getParent() --> 获取当前标签的父标签，返回值是JspTag
+				void setJspBody(JspFragment jspBody) --> 设置标签体的内容，这个方法由服务器调用，
+															服务器通过该方法将标签体传入到处理器类中。
+				void setJspContext(JspContext pc) --> 设置当前页面的上下文，这个JspContext就是PageContext，可以用来获取页面中的其他隐含对象
+				setParent(JspTag parent) --> 设置当前标签的父标签，服务器调用，服务器通过该方法，将父标签设置进处理器类
+				
+			> 通常我们是通过继承SimpleTagSupport类来创建自定义标签。 *****
+				- 通过该类创建自定义表签只需要根据需求重写doTag()方法。
+				- 如果我们想获取JspContext，直接调用getJspContext()
+				- 如果想获取父标签，直接调用getParent()
+				- 如果想获取标签体，直接调用getJspBody()
+
+		2.编写一个tld文件（实际上就是一个xml文件）
+			<tlib-version>1.0</tlib-version>
+			<short-name>a</short-name>
+			<uri>http://www.atguigu.com/taglib/a</uri>
+				- 标签库的整体描述信息
+				- tlib-version 声明标签库的版本
+				- short-name 标签库前缀，在页面中通过前缀使用标签库
+				- uri 标签库唯一约束，通过uri在页面中引入标签库（可选属性）
+			
+			<tag>
+				<name>MyTag</name>
+				<tag-class>com.atguigu.taglib.MyTag</tag-class>
+				<body-content>empty</body-content>
+			</tag>
+				- tag标签是具体标签的描述信息，在一个tld文件中可以声明多个tag标签
+				- name 标签的名字，在jsp中通过标签名来使用标签
+				- tag-class 标签处理器类的全类名
+				- body-content 标签体的类型，empty代表没有标签体（自结束标签）
+					body-content有四个可选值：
+						常用
+						empty ：代表当前标签没有标签体，是一个空标签（自结束标签）
+						scriptless：当标签体中的内容是一个EL表达式时，会有服务器自定解析
+						
+						不常用
+						JSP ： 代表当前标签体中可以是JSP的脚本片段，一般咱们用的比较少
+						tagdependent：当标签体中内容是一个EL表达式时，服务器不会自动解析，不用
+						
+					结论：
+						如果标签没有标签体则使用empty
+						如果有标签体则使用scriptless
+			当标签中具有属性时，还需要在tag标签中添加一个attribute标签
+			<attribute>
+				<name>test</name>
+				<required>true</required>
+				<rtexprvalue>true</rtexprvalue>
+			</attribute>
+				- name 表示属性的名字
+				- required 属性是否为必须的
+				- rtexprvalue 是否自动解析EL表达式
+				
+		3.在JSP中使用自定义标签
+			> 通过taglib指令向页面中导入自定义标签库
+				- <%@ taglib prefix="a" uri="http://www.atguigu.com/taglib/a" %>
+				
+		
+	
+2.JSTL（JSP Standard Tag Library）
+	[1] JSTL简介
+		> JSTL是JSP的标准标签库
+		> JSTL为我们提供了一些常用的标签，供我们日常开发使用（if 、 if...else 、遍历 、 日期格式化）
+		> 标签库
+			- core ：核心标签库
+				- 最常用的一个标签库，也就是我们熟悉c标签。
+				
+			- fn ：函数标签库
+				- 函数标签库它需要结合EL表达式使用，主要定义了一些字符串操作的方法。
+			
+			- fmt ：格式化标签库
+				- 主要用来做日期、数字的格式化以及国际化
+				- 20151019 2015/10/19  10/19/2015
+				- 10000 10,000
+			
+			- sql : 数据库标签库	
+				- 主要用来在JSP中操作数据库的，已淘汰
+			
+			- xml ： xml标签库	
+				- 主要用来在JSP操作解析XML文档，已淘汰
+		
+		> JSTL的使用
+			使用JSTL需要先导入两个jar包
+				taglibs-standard-impl-1.2.1.jar
+				taglibs-standard-spec-1.2.1.jar
+				
+	[2] 核心标签库	
+		 - 导入核心标签库
+			<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+		 - 核心标签库一般使用c作为前缀，所以我们也称核心标签库为c标签。
+		 - c标签是我们JSTL中最常用的一个标签库，它里边封装了很多开发中常用的功能。
+		 
+		 c:out
+		 作用：向页面中输入一个内容
+		 例子：<c:out value="" default="" escapeXml=""></c:out>
+		 属性：
+			value : 要输出内容
+			default : 当内容为空时显示的默认值
+			escapeXml ： 是否自动转义特殊字符，默认值为true 自动转义，一般不修改该属性
+		
+		c:set
+		作用：向域中设置一个属性
+		例子：<c:set var="name" value="孙悟空" scope="request"></c:set>
+		属性：
+			var ：向域中存储的属性名
+			value ：向域中存储的属性值
+			scope ：向那个域中添加属性，四个可选值（page request session application）,默认是page
+		
+		c:remove
+		作用：移除域中的一个属性
+		例子：<c:remove var="name" scope="session"/>
+		属性：
+			var ：要移除的属性的名字
+			scope ：要移除的属性所在的域，四个可选值（page request session application）
+				如果不设置该属性，则默认移除四个域中指定属性。
+		
+		c:if
+		作用 ：相当于java中if语句
+		例子：	
+			<c:if test="${empty param.name }">
+				<h3>您没有输入name属性！</h3>
+			</c:if>
+		属性：
+			test ：接收一个boolean类型的值
+				如果test的值为true则标签体执行
+				否则不执行标签体
+		
+		c:choose c:when c:otherwise
+		作用：相当于if...else
+		例子：
+				<c:choose>
+					<c:when test="${param.score == 100 }">
+						<h3>恭喜您考了100分！</h3>
+					</c:when>
+					<c:otherwise>
+						<h3>恭喜你，你不及格！</h3>
+					</c:otherwise>
+				</c:choose>
+		属性：
+			when标签中的test属性：
+				接收一个boolean类型的值
+					如果test的值为true则标签体执行
+						否则不执行标签体
+		
+		注意：在choose标签中可以指定多个when标签，但是只有一个when会执行。
+				当所有的when标签都不执行时，则otherwise标签执行。
+			
+			c:when和c:otherwise不能脱离c:choose使用。
+			
+		
+		c:forEach
+		作用：可以在页面中对集合进行遍历
+		例子：
+			<c:forEach items="${list}" var="hero">
+				${hero} <br />
+			</c:forEach>
+			
+			<c:forEach items="${map }" var="user">
+				${user.key} --- ${user.value} <br />
+			</c:forEach>
+		属性：
+			items：要遍历的集合
+			var：对集合中的对象引用的名字
+			
+		注意：在遍历Map时，返回的是一组一组的键值对结构
+			我们可以通过对象.key获取键，通过对象.value获取值
+			
+		作用：可以用来遍历一组数
+		例子：
+			<c:forEach begin="1" end="20" var="index" step="1">
+				<a href=#>${index}</a>
+			</c:forEach>
+		属性：
+			begin ：开始的位置，注意begin不能小于0
+			end ：结束的位置
+			var ：引用的名字
+			step ：步长，每次自增的大小
+			
+		c:url
+		作用：可以创建一个完整的绝对路径
+		例子：
+			<c:url value="/index.jsp">
+				<c:param name="name" value="孙悟空"></c:param>
+				<c:param name="age" value="18"></c:param>
+			</c:url>
+		属性：
+			value：要设置的地址，注意该地址要以/开头，否则不会加上项目名
+		在url标签中可以添加c:param标签，可以自动为地址拼接上请求参数。
+		
+		c:redirect
+		作用：请求的重定向
+		例子：
+			<c:redirect url="/index.jsp">
+				<c:param name="name" value="唐僧"></c:param>
+			</c:redirect>
+		属性：
+			url：
+				重定向到目标地址，注意该地址不要自己添加项目名。
+			在redirect标签中可以添加c:param标签，可以自动为地址拼接上请求参数。
+			
+		设置绝对路径的三种方式：
+			1.<c:set var="ctx" value="${pageContext.request.contextPath }"></c:set>
+				使用这种方式，可以通过${ctx}在页面中代替项目名
+				
+			2.使用<c:url value="/index.jsp"></c:url>
+				使用url标签，它会自动为绝对路径加上项目名
+			
+			3.<base href="http://${pageContext.request.serverName }:${pageContext.request.serverPort }${pageContext.request.contextPath }/" />
+				使用base标签可以为页面中所有的相对路径，加上项目名	
+	
+	[3] 函数标签库	
+			作用：函数标签库需要配合EL表达式使用，它里面的方法都是一些字符串的操作
+			引入函数标签库：<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
+			例子：
+				
+				${fn:contains("hello","He") } <br /> 判断前一个字符串是否包含后一个字符串
+				
+				${fn:containsIgnoreCase("hello","He") } <br /> 判断前一个字符串是否包含后一个字符串，不区分大小写
+				
+				${fn:endsWith("hello","alo") }<br /> 判断前一个字符串是否以后一个字符串结尾
+				
+				<!-- 自动将特殊字符转义 -->
+				${fn:escapeXml("<html></html>") }<br /> 自动将特殊字符进行转义
+				
+				<!-- fn:join用于将一个String数组转换一个字符串，第二个参数代表的连接符 -->
+				${fn:join(strs,",") }<br /> 将一个String数组，以指定字符串拼接为一个新的字符串
+				
+				${fn:split("a,b,c,d,e",",")[2] }<br /> 将一个字符串，以指定字符拆分为一个字符数组
+				
+				${fn:trim("      abcd       ") }<br /> 去掉字符串的前后空格
+				
+				剩下方法参照 alt+/
+	
+	[4] 练习

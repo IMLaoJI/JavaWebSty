@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>表单</title>
+</head>
+<body>
+
+	<!-- 使用form标签来创建一个表单 -->
+	<!-- action指向的是一个服务器的地址 -->
+	<form action="target.html">
+		<!-- 文本框 -->
+		<!-- 表单中的信息最终以键值对的形式提交到服务器 -->
+		<!-- 值就是咱们输入的内容 ， 需要通过name属性来指定键 -->
+		<!-- 提交表单后请求参数将会以如下形式发送给服务器 -->
+		<!-- target.html?target.html?username=admin&password=123123 -->
+		<!-- 请求参数和url地址之间使用?分开，多个请求参数之间使用&分开 -->
+		
+		用户名 <input type="text" name="username" /> <br /><br />
+		
+		<!-- 密码框 -->
+		密码 <input type="password" name="password" /> <br /><br />
+		
+		<!-- 单选框 -->
+		<!-- 单选按钮使用name属性来分组 -->
+		<!-- 像这样需要用户选择的表单项，还需要指定一个value，最终被提交的服务器就是value属性 -->
+		性别  <input type="radio" name="gender" value="nan" /> 男   <input type="radio" name="gender" value="nv" /> 女  <br /><br />
+		
+		<!-- 多选框 -->
+		爱好 <input type="checkbox" name="hobby" value="lq" /> 篮球  
+		 <input type="checkbox" name="hobby" value="zq" /> 足球
+		  <input type="checkbox" name="hobby" value="ymq" /> 羽毛球
+		  <br /><br />
+		  
+		<!-- 下拉列表 -->  
+		<!-- 使用select创建一个下拉列表，使用option标签来创建一个一个的选项 -->
+		<!-- 下拉列表的name属性在select标签中指定，value属性在option标签中指定 -->
+		你最喜欢女明星：
+		<select name="star">
+			<option value="fbb">范冰冰</option>
+			<option value="zw">赵薇</option>
+			<option value="tw">汤唯</option>
+		</select>
+		 <br /><br />
+		<!-- 提交按钮 -->
+		<!-- 我们可以通过value属性来修改提交按钮的文字 -->
+		<input type="submit" value="注册" /> <br /><br />
+	</form>
+
+
+</body>
+</html>

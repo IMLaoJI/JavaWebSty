@@ -1,0 +1,253 @@
+> 一般将一个网页分成三部分：结构、表现行为
+> 一个设计优良的网页要做到结构、表现、行为三者分离（解耦）
+> 结构：HTML
+  表现：CSS
+  行为：JavaScript jQuery
+
+1.Html
+	[1]简介
+		HTML是HyperText Markup Language的缩写，意为超文本标记语言，是一种用来编写网页的语言。
+		HTML本身语法非常简单，主要是通过各种标签来定义出一个网页的基本结构
+		HTML语法本身要求并不严格，即使网页写的非常不标准浏览器也能正确的解析。
+		
+	[2]基本结构
+		<!DOCTYPE html>
+		<html>
+			<head>
+				<meta charset="utf-8" />
+				<title>网页的标题</title>
+			</head>
+			<body>
+				<!-- 网页的主体内容 -->
+			</body>
+		</html>
+		
+	[3]语法
+		1.标签必须正确结束（成对出现或自结束标签）
+		2.标签不能交叉嵌套
+		3.属性必须有值且值必须加引号
+		4.注释不能嵌套
+		5.在html中不区分大小写
+		
+	[4]常用标签
+		①标题
+			h1 ~ h6
+			
+		②段落
+			<p></p>
+			
+		③换行
+			<br />
+			
+		④无序列表
+			<ul>
+				<li></li>
+			</ul>
+			
+		⑤图片
+			<img alt="" src="" />
+			alt属性：在图片不能加载时描述图片
+			src属性：指向一个外部的图片路径
+			
+		⑥内联框架
+			<iframe src="" name=""></iframe>
+			
+		⑦超链接
+			<a href="" target="" >链接的文字</a>
+			
+			
+	[5]表格
+		<table>
+			<tr>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td rowspan="2"></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td></td>
+				<td colspan="2"></td>
+			</tr>
+		</table>
+		
+	[6]表单
+		> action属性指向的是一个服务器地址，表单要提交到地址
+		<form action="">
+			文本框:<input type="text" name="" />
+			密码框:<input type="password" name="" />
+			单选框:<input type="radio" name="" value="" />
+			多选框:<input type="checkbox" name="" value="" />
+			下拉列表：
+				<select name="">
+					<option value=""></option>
+				</select>
+			提交按钮:<input type="submit" value="按钮上的文字" />
+		</form>
+	
+		
+	[7]DIV和SPAN
+		div是块级元素，会占用页面中一整行，主要用来在页面中布局。
+		span是内联元素，之后占用自身的大小，主要用来为文字设置样式。
+	
+	[8]转义字符
+		空格: &nbsp;
+		< : &lt;
+		> : &gt;
+		
+2.CSS
+	[1]简介
+		CSS是Cascading Style Sheets的缩写，层叠样式表的意思主要用来设置网页中元素的样式。
+		CSS语法也十分简单，主要分为两部分：
+			①选择器：
+			②声明：
+		CSS语法虽然简单，但是要想真正的掌握CSS还是要花费一定时间的，尤其是布局和各种样式的实现。
+		作为我们后台工程师来说不需要很深的CSS功底，只需要了解基本语法即可。
+	[2]基本语法
+		①编写位置
+			1) 内部
+				> 标签的style属性中
+				<p style="color: red ; font-size: 12px">落霞与孤鹜齐飞，秋水共长天一色</p>
+				
+				> 写到style标签中   ***
+					<style type="text/css">
+						p {
+							color: blue;
+							background-color: yellow;
+						}
+					</style>
+				
+			2) 外部 *****
+				> 写在外部的css文件中，然后通过link标签引入外部的css文件
+				<link rel="stylesheet" type="text/css" href="style.css" />
+				
+		②基本语法
+			选择器 {声明1;声明2}
+			
+			选择器 {
+				样式名1:样式值1;
+				样式名2:样式值2;
+			}
+			
+			
+			1) 选择器
+				> 元素选择器
+					- 标签名
+					- 例子：
+						p{}
+						a{}
+						h1{}
+						
+				> id选择器
+					- #id
+					
+				> 类选择器
+					- .class
+					
+				> 选择器分组
+					- 可以同时使用多个选择器
+					- 选择器1,选择器2,选择器N{}
+					
+			2) 声明
+				> 声明格式：样式名1:样式值1;
+				
+			3) 常用样式
+				> 字体颜色 
+					color
+				> 宽度 
+					width
+				> 高度 
+					height
+				> 背景颜色
+					background-color
+					
+	[3]颜色
+		> 在CSS中我们使用RGB值来表示颜色。
+		> RGB值可以写成一个三组两位十六进制数字，这个数字要求以#号开头
+		> #红色绿色蓝色
+		> 000000 - ffffff
+		 
+3.JavaScript
+	[1]简介
+		JavaScript简称JS是运行在浏览器端的一门脚本语言，一开始主要用来做浏览器端验证，但现在功能已经不止于此。
+		所谓脚本语言就是指，代码不需要编译，直接运行，并且读入一行运行一行。
+		JavaScript目前应用非常广泛，例如：浏览器端的验证，Ajax，富客户端等，甚至也有服务器端的JavaScript —— node.js
+	[2]编写位置
+		①网页内部
+			<script>
+				alert("hello");
+			</script>
+			
+		②外部.js文件
+			<script type="text/javascript" src="script.js"></script>
+			
+	[3]基本语法
+		①注释
+			> 单行注释：//
+			> 多行注释: /**/
+			
+		②变量
+			> 声明：
+				JS是一门弱类型语言，声明变量时不需要指定变量的类型，只需要使用var关键字
+				例如：var a;
+			> 赋值：
+				JS是一门动态类型的语言，可以给一个变量赋任意类型的值，同时在使用过程中可以任意修改变量的类型。
+				a = 123;
+				a = "hello";
+			> 声明和赋值同时进行：
+				var b = 123;
+				var c = "hello";
+				var d = true;
+			
+		③函数
+			> 在JS中函数也是一个对象，也可以将一个函数的引用赋值给一个变量。
+			> 声明函数使用function关键字
+			> 第一种方式：
+				var sum = function(a,b){
+					return a+b;
+				};
+				
+			> 第二种方式:
+				function sum2(a,b,c){
+					return a+b+c;
+				}
+				
+			> 函数的调用
+				- 函数的引用 + ();
+				- sum(123,456);
+				- sum2(123,"abc",true)
+			
+			> 调用函数不会检查参数的类型和个数，所以在js中不存在重载这事。
+			
+		④对象
+			> 对象的创建
+			> 1.
+				var obj = new Object();
+			> 2.
+				var obj2 = {};
+				
+			> 动态的为对象添加属性
+				对象.属性名=属性值
+				例子：
+					obj.name = "sunwukong";
+					obj.age = 18;
+					obj.fun = function(){
+						alert("hello");
+					};
+			
+			> 在创建对象时，直接添加属性
+				var obj3 = {
+					name:"孙悟空",
+					age:18,
+					fun:function(){
+					}
+				};
+			
+
+		
+	

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript">
+	var xhr = getXMLHttpRequest();
+	
+	alert(xhr);
+	
+	//写一个获取XHR的方法
+	function getXMLHttpRequest(){
+		try{
+			//大部分浏览器都支持的方式
+			return new XMLHttpRequest();
+		}catch(e){
+			try{
+				//IE6以下浏览器支持的方式
+				return new ActiveXObject("Msxml2.XMLHTTP");
+			}catch(e){
+				try{
+					//IE5以下的浏览器
+					return new ActiveXObject("Microsoft.XMLHTTP");
+				}catch(e){
+					alert("你是火星来的吧！你的浏览器不支持AJAX！");
+				}
+				
+			}
+			
+		}
+	}
+
+</script>
+
+</head>
+<body>
+
+</body>
+</html>

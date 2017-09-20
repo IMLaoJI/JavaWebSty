@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE student PUBLIC "//www.atguigu.com//xmlDTD//stu" "http://www.atguigu.com/stu.dtd">
+<student>
+	<name></name>
+	<age></age>
+	<gender></gender>
+	<address></address>
+
+</student>

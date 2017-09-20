@@ -1,0 +1,300 @@
+1.前端
+	一个网页一般由三部分构成：结构、表现、行为
+	结构：HTML
+	表现：CSS
+	行为：JavaScript
+
+	JavaScript
+		- JavaScript最重要的内容就是DOM操作。
+		- DOM (Document Object Model) 文档对象模型
+		- DOM就是用来操作网页
+			Document 代表的整个网页
+			Object 将网页中的每一个元素都转换为了一个对象
+						转换为对象以后，我们就可以以面向对象的方式去操作网页
+			Model 使用一个树形结构来表示页面中所有的对象的关系，来方便我们从页面中获取到对象。
+			
+			节点之间的关系：
+				最大的接口：Node
+				子接口: Element Document Attr Text
+			
+			DOM查询的常用方法：
+				根据id查询一个元素节点对象
+					document.getElementById(id)
+					
+				根据标签名查询一组元素节点对象
+					document.getElementsByTagName(标签名)
+					
+				根据标签的name属性值获取一组元素节点对象
+					document.getElementsByName(name)
+					
+			window.onload = function(){}作用：
+				window.onload绑定的那个函数，将会在整个页面加载完成之后调用。
+				记住：写JS代码之前，先把他写上。
+				
+	jQuery
+		- jQuery是目前最流行的JS框架（JS库）
+		- 作用：简化JS的开发，可以基本解决浏览器之间的兼容性问题。
+		- jQeury的核心函数：
+			$是核心函数，核心函数可以根据不同的参数有四种用法。
+			
+			第一种: 传一个函数作为参数
+				$(function(){});
+				作用：核心函数中的函数会在整个文档加载完成之后调用，和window.onload=function(){}差不多
+						但是有区别。
+			
+			第二种: 传一个选择器的字符串
+				$("#id") $(".class") $("tagName")
+				作用：可以根据选择器字符串获取到页面中的指定元素
+				
+			第三种：传一段HTML代码
+				$("<li>广州</li>")
+				作用：可以根据这段HTML代码来创建相应的对象
+				
+			第四种: 传一个DOM对象
+				$(DOM对象)
+				作用：将DOM对象转换为jQuery对象
+					
+	XML解析：
+		XML解析的技术体系：
+		DOM
+			- DOM解析是一次性将整个XML文档全都加载进内存，生成一棵DOM树，我们可以通过DOM树来解析XML文档
+			- 优点：
+				完全面向对象的方式，使用起来比较简单
+				完全将XML文档加载进内存，我们可以反复操作文档
+				DOM支持增删改查的操作
+			- 不足：
+				完全将XML文档加载进内存，如果文档较大，则会占用大量内存，浪费资源：
+				一次性将文档加载进内存，解析性能较差
+		
+		DOM4J
+			- 由DOM扩展出了DOM4J，DOM4J是JavaEE首选的XML的解析方式。
+
+		SAX
+			- Simple API for XML
+			- SAX是基于事件的回调的方式，它是一个节点一个节点的解析XML文档，解析完一个在解析下一个。
+			- 优点：
+				一次只解析一个节点，不需要将整个文档都加载进内存，所以解析性能好，占用内存小。
+			- 缺点：
+				使用起来比较复杂，不容易掌握
+				SAX解析一旦解析开始，就不能手动结束，必须要解析完整个XML文档才会停止解析。
+				一次解析一个节点，一旦解析过该节点则不能重复解析，除非在解析一次。
+				仅支持查询，不支持修改
+				
+		PULL
+			- 由于SAX有根本停不下来的特点，所以出现PULL解析，PULL解析的原理和SAX解析一样，只不过PULL可以通过手动停止解析。
+			- PULL是Android内置的解析方式，Android开发一般使用PULL
+			
+	HTTP
+		- 浏览器发送给服务器叫请求报文
+		- 服务器发送给浏览器叫响应报文
+		- HTTP协议规定浏览器和服务器之间的报文的格式
+		- 请求报文：
+			请求首行
+			请求头
+			空行
+			请求体
+			> get请求没有请求体！！
+			
+			
+		- 响应报文
+			响应首行
+			响应头
+			空行
+			响应体
+			
+		- get请求和post请求的区别
+			> 除了表单method属性设置为post时，其余都是get请求。
+			> 只要用表单基本都是post
+			> 区别：
+				传递请求参数：
+					get请求通过URL地址传递请求参数
+					post请求通过请求体传送参数
+					
+					get请求的请求参数大小限制为255个字符
+					post请求的大小没有限制，所以提交表单时都是使用post
+					
+					get请求通过地址栏传递请求参数，请求参数可以直接在地址栏看到，相对不安全
+					post请求通过请求体发送请求参数，请求参数不能直接看到，相对安全
+					
+	Servlet
+		- Servlet是运行在服务器端的小组件
+		- Servlet需要运行在Servlet容器中，Servlet容器一般指的就是WEB服务器
+		- Servlet容器负责管理Servlet的生命周期，负责调用Servlet
+		- 编写一个Servlet的步骤：
+			1.创建一个类并实现Servlet接口。
+			2.在web.xml文件中配置Servlet。
+				<servlet>
+					<servlet-name></servlet-name>
+					<servlet-class></servlet-class>
+				</servlet>
+				<servlet-mapping>
+					<servlet-name></servlet-name>
+					<url-pattern></url-pattern>
+				</servlet-mapping>
+				
+		- Servlet的生命周期
+			- Servlet对象由被创建到被销毁的过程。
+			- Servlet生命周期方法：
+				1.构造器
+					- 服务器创建Servlet实例时调用，只会调用一次，Servlet是单例。
+					- 一般情况下，服务器会在Servlet第一次处理请求时创建Servlet实例。
+				2.init()
+					- 构造器调用完成后，立即被调用，用来初始化Servlet，只会调用一次
+				3.service()
+					- 每次处理请求的时候都会调用，会被调用多次。
+				4.destroy()
+					- Servlet实例销毁前调用，用来做一些收尾工作（释放资源），只会调用一次
+		
+		- 转发和重定向的区别
+			- 转发时浏览器只发送了一次请求。
+			- 重定向时浏览器发送了两次请求。
+			- 转发是在服务器端发生的。
+			- 重定向是在浏览器端发生的。
+			- 转发时浏览器地址栏不会发生改变。
+			- 重定向是浏览器的地址栏会发生改变。
+			- 转发时request域中的属性不会丢失。
+			- 重定向时request域中属性会丢失。
+			
+			结论：需要在request域中传递属性时，使用转发。不需要时，使用重定向
+			
+			转发: request.getRequestDispatcher(路径).forward();
+				- 转发的路径由服务器解析，所以根目录相当于项目的根目录，不用加项目名。
+			
+			重定向: response.sendRedirect(路径)
+				- 重定向的路径由浏览器解析，所以根目录相当于服务器的根目录，需要加上项目名。
+				
+		- 域对象
+			- JavaWeb中一共有四个域对象：
+				PageContext pageContext
+					- 范围：当前页面
+				HttpServletRequest request
+					- 范围：当前请求
+				HttpSession session
+					- 范围：当前会话
+				ServletContext application
+					- 范围：当前项目
+			- 四个域对象，在JSP中可以全都获取到，而在Servlet中不能获取到PageContext。
+			
+	JSP
+		- JSP本质就是一个Servlet
+		- JSP更擅长显示一个页面，而Servlet擅长调用Java代码
+		- 所以开放中，我们使用Servlet来处理请求，使用JSP来显示页面。
+		- JSP的运行原理：
+			JSP文件 首先会被翻译为一个java文件，然后java文件在被编译为一个class文件，
+				最终class文件被加载进虚拟机中，实际上响应我们的是该对象。
+		- JSP中9大隐含对象
+			- 因为在JSP对应的java文件中，这些对象已经声明并赋值了，所以在JSP中可以直接使用。
+			pageContext
+			request
+			session
+			application
+			page
+			response
+			out
+			exception
+			config
+	EL
+		- EL用来代替JSP表达式<%= %>
+		- 作用：向页面中输入一个对象
+		- 语法: ${表达式}
+		- EL表达式11个隐含对象
+			pageContext --> 和JSP中一样，可以用来获取JSP中其他的隐含对象。
+			
+			pageScope
+			requestScope
+			sesssionScope
+			applicationScope
+			- 这四个Scope并不是我们熟悉域对象，而是将域对象中存储属性Map提取出来。
+				我们可以通过这个四个对象来获取指定域中的属性。
+			- 类型 Map<String,Object>
+			
+			param
+				- 类型 Map<String , String>
+				- 作用：可以获取用户发送的请求参数
+			
+			paramValues
+				- 类型 Map<String , String[]>
+				- 作用：可以获取到一个请求参数对应的多个值
+			
+			了解：
+				header
+				headerValues
+				cookie
+				initParam
+	JSTL
+		- JSP标准标签库
+		- 用来替换JSP中脚本片段<% %>
+		- JSTL就是以使用标签的形式调用Java代码。
+		- 常用：
+			核心标签库
+				c标签
+					<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+			函数标签库
+				fn标签 --> 需要结合EL表达式一起使用，主要是一些字符串相关的操作
+					<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+			国际化标签库
+				fmt标签 --> 用来格式化日期，时间，语言等等
+					<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+					
+	Cookie&Session
+		- HTTP协议是一个无状态的协议，服务器不能区分多次请求是否发送自一个用户。
+		- 解决方案：
+			- Cookie
+				- Cookie是由服务器创建，发送给浏览器的，浏览器收到Cookie以后会在本地保存。
+				- 浏览器在以后每次访问服务器时，都会带着该Cookie，服务器就可以根据不同的Cookie信息，来识别不同的浏览器。
+			
+			- Session
+				- Session是保存到服务器中，服务器中一个SessionMap，SessionMap是用来保存Session的集合。
+				- 这个Map的key是session的id，而Map的值是Session对象本身。
+				- 服务器会给每一次会话创建一个Session对象，服务器会将Session的id作为Cookie发送给浏览器，
+					浏览器会保存该Cookie，每次访问时都会携带该Cookie，服务器就可以根据浏览器携带的Cookie，
+						找到浏览器对应的Session对象。
+				- 这个Cookie叫做：JSESSSIONID=session的id
+				- Session的创建时机：
+					session对象在getSession()方法第一次被调用时创建的。
+					getSession方法被调用时，首先会检查浏览器的Cookie是否有JSESSIONID，
+						如果没有：创建一个新的对象，并返回
+							如果有：
+								JSESSIONID有对应的Session对象，直接返回Session对象
+							如果没有：
+								创建一个新的对象，并返回
+				
+	
+	Filter
+		- 过滤器
+		- 作用：
+			可以在请求到达WEB资源之前对请求进行拦截
+				也可以放行请求到达指定的资源
+					也可以在响应到达浏览器之前做一个预处理
+					
+		- Filter创建流程
+			1.创建一个类实现Filter接口
+			2.在web.xml文件中配置Filter
+			<filter>
+				<filter-name></filter-name>
+				<filter-class></filter-class>
+			</filter>
+			<filter-mapping>
+				<filter-name></filter-name>
+				<url-pattern></url-pattern>
+				<dispatcher></dispatcher>
+			</filter-mapping>
+			
+			dispatcher要过滤的请求的类型：
+				REQUEST：拦截直接请求，默认值，如果不配置dispatcher则默认为该值
+				FORWARD: 拦截通过转发的请求。
+				
+			
+			
+			
+				
+		
+		
+		
+		
+		
+		
+		
+		
+					
+					

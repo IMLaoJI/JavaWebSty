@@ -1,0 +1,101 @@
+1.EL表达式
+	[1] 简介
+		> JSP表达式 <%= %> 用于向页面中输出一个对象。
+		> 到JSP2.0时，在我们的页面中不允许出现 JSP表达式和 脚本片段。
+		> 使用EL表达式来代替JSP表达式 ，使用标签来代替脚本片段。
+		> EL表达式用来向页面输出内容
+	
+	[2] 基本语法
+		> ${表达式}
+		> EL表达式可以从域中获取属性。
+			 - 使用 ${属性名}
+			 - 如果只填写一个属性名，EL表达式会自动做全域查找。
+			 - 所谓的全域查找，就是按照page request session application四个域范围内分别，找到就返回属性，如果没找到什么都不返还。
+			 - 我们还可以指定去哪个域查找
+				pageScope
+				requestScope
+				sessionScope
+				applicatScope
+			- 例子：
+				查找request中属性
+					${requestScope.属性名}
+				查找session中的属性
+					${sessionScope.属性名}
+			
+			- 注意：EL表达式只能获取域中的属性
+				EL表达式不能直接调用对象的方法
+				
+			- 通过EL表达式读取对象的属性时，只需要${对象.属性名}
+				EL表达式会自动调用对象的对应的getter方法，通过将属性名首字母大写，然后加上一个get
+				
+			- 当读取一些名字比较特殊的属性时，这种特殊值必须要指定域
+				${requestScope['属性名']}
+		
+	[3] 隐含对象
+			> EL中一共有11个内置对象。
+				- pageContext
+					类型 PageContext
+						它和JSP中pageContext是一个东西
+					作用 可以获取到JSP中其他的隐含对象
+					例如：可以获取项目名：
+						${pageContext.request.contextPath }
+				
+				- pageScope
+					类型：Map<String,Object>
+					代表：page域中的属性
+					作用：可以获取到page域中的属性
+					
+				- requestScope
+					类型：Map<String,Object>
+					代表：request域中的属性
+					作用：可以获取到request域中的属性
+					
+				- sessionScope
+					类型：Map<String,Object>
+					代表：session域中的属性
+					作用：可以获取到session域中的属性
+				
+				- applicatScope
+					类型：Map<String,Object>
+					代表：application域中的属性
+					作用：可以获取到application域中的属性
+					
+				- param
+					类型: Map<String , String>
+					代表：用户发送的请求参数
+					作用：可以获取请求参数 
+					用法: ${param.参数名}
+					
+				- paramValues
+					类型：Map<String , String[]>
+					代表：一个请求参数对应的多个值
+					用法: ${paramValues.参数名[索引]}
+					
+				- header
+					作用：可以获取到用户发送的请求头
+					类型：Map<String , String>
+					例如：获取用户的系统信息 ${header['User-Agent']}
+					
+			?	- headerValues
+					类型: Map<String , String[]>
+					作用：可以获取一个头的多个值
+			
+			?	- initParam；
+					类型：Map<String , String>
+					作用：获取整个WEB应用的初始化参数
+			
+			?	- cookie
+					类型：Map<String , Cookie>
+					作用：用来获取Cookie
+
+					
+	
+	[4] 运算
+		> 在EL中可以直接使用运算符进行运算。
+		> 在EL中可以使用Empty元素符：
+			如果值为null ， empty则返回 true
+			如果为空串， 则返回 true
+			空的集合    返回true
+		> 所以empty元素符经常用来判断集合或者字符串是否为空
+
+

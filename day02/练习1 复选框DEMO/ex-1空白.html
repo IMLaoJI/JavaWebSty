@@ -1,0 +1,159 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>全选练习</title>
+<script type="text/javascript">
+
+	/*
+	技术点：
+	1.DOM查询
+	2.事件响应函数绑定
+	3.checkbox操作
+	4.在事件响应函数中使用this关键字代表当前控件
+	5.逻辑思维能力
+	*/
+	
+	window.onload = function(){
+		
+		//获取四个name为items的多选框
+		var items = document.getElementsByName("items");
+		
+		//获取全选全不选的多选框
+		var checkedAllBox = document.getElementById("checkedAllBox");
+		
+		
+		//1.#checkedAllBtn
+		//全选按钮，点击按钮以后所有的多选框全都被选中
+		var checkedAllBtn = document.getElementById("checkedAllBtn");
+		checkedAllBtn.onclick = function(){
+			
+			//遍历items
+			for(var i=0 ; i<items.length ; i++){
+				//设置每一个多选框为选中状态
+				items[i].checked = true;
+			}
+			
+			//设置全选全不选多选框的状态
+			checkedAllBox.checked = true;
+			
+		};
+		
+		//2.#checkedNoBtn
+		//全不选按钮，点击按钮后所有的多选框都变成没选中的状态
+		var checkedNoBtn = document.getElementById("checkedNoBtn");
+		checkedNoBtn.onclick = function(){
+			
+			//遍历items
+			for(var i=0 ; i<items.length ; i++){
+				//设置多选框为没选中状态
+				items[i].checked = false;
+			}
+			
+			//设置全选全不选多选框的状态
+			checkedAllBox.checked = false;
+			
+		};
+		
+		//3.#checkedRevBtn
+		//反选按钮，点击以后选中变成没选中，没选中变成选中
+		var checkedRevBtn = document.getElementById("checkedRevBtn");
+		checkedRevBtn.onclick = function(){
+			
+			//设置一个默认值，默认四个多选框全都被选中
+			var isAllChecked = true;
+			
+			//遍历itmes
+			for(var i=0 ; i<items.length ; i++){
+				//判断当前选中状态
+				/* if(items[i].checked){
+					items[i].checked = false;
+				}else{
+					items[i].checked = true;
+				} */
+				items[i].checked = !items[i].checked;
+				
+				//判断四个多选框是否全都被选中
+				if(!items[i].checked){
+					//修改isAllChecked的值
+					isAllChecked = false;
+				}
+			}
+			
+			//设置checkedAllBox的选中状态
+			checkedAllBox.checked = isAllChecked;		
+		};
+		
+		//4.#sendBtn
+		//发送按钮
+		var sendBtn = document.getElementById("sendBtn");
+		sendBtn.onclick = function(){
+			//遍历items
+			for(var i=0 ; i<items.length ; i++){
+				//判断当前元素是否被选中
+				if(items[i].checked){
+					alert(items[i].value);
+				}
+			}
+			
+		};
+		
+		//5.#checkedAllBox
+		//全选/全不选的多选框
+		checkedAllBox.onclick = function(){
+			//遍历items
+			for(var i=0 ; i<items.length ; i++){
+				//设置选中状态
+				//在js中，this关键字指的是当前函数所属的对象
+				items[i].checked = this.checked;
+			}
+		};
+		
+		//6.items
+		//为四个多选框全都绑定上单击响应函数
+		for(var i=0 ; i<items.length ; i++){
+			items[i].onclick = function(){
+				
+				//设置一个默认值，默认四个多选框全都被选中
+				var isAllChecked = true;
+				
+				for(var j=0 ; j<items.length ; j++){
+					//判断四个多选框是否全都被选中
+					if(!items[j].checked){
+						//修改isAllChecked的值
+						isAllChecked = false;
+						
+						//退出循环
+						break;
+					}
+				}
+				
+				//设置checkedAllBox的选中状态
+				checkedAllBox.checked = isAllChecked;		
+				
+				
+			};
+		}
+	};
+	
+</script>
+</head>
+<body>
+
+	<form method="post" action="">
+		你爱好的运动是？<input type="checkbox" id="checkedAllBox" />全选/全不选 
+		
+		<br />
+		<input type="checkbox" name="items" value="足球" />足球
+		<input type="checkbox" name="items" value="篮球" />篮球
+		<input type="checkbox" name="items" value="羽毛球" />羽毛球
+		<input type="checkbox" name="items" value="乒乓球" />乒乓球
+		<br />
+		<input type="button" id="checkedAllBtn" value="全　选" />
+		<input type="button" id="checkedNoBtn" value="全不选" />
+		<input type="button" id="checkedRevBtn" value="反　选" />
+		<input type="button" id="sendBtn" value="提　交" />
+	</form>
+
+</body>
+</html>
